@@ -1,0 +1,237 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  background-image: url('./assets/background.jpg');
+  color: rgba(44, 2, 35, 0.952);
+}
+
+h1 {
+  float: left;
+  font-family: monospace;
+  font-size: 30px;
+  color: #8B008B;
+  margin: 0;
+  padding: 10px;
+}
+
+@keyframes headerFooterColor {
+  0% {
+    background-color: rgba(238, 174, 238, 0.747);
+  }
+  25% {
+    background-color: rgba(186, 219, 230, 0.849);
+  }
+  50% {
+    background-color: rgba(221, 181, 187, 0.849);
+  }
+  75% {
+    background-color: rgba(243, 230, 173, 0.63);
+  }
+  100% {
+    background-color: rgba(230, 176, 184, 0.781);
+  }
+}
+
+.bigtext {
+  font-size: large;
+}
+
+header, footer {
+  animation: headerFooterColor 6s infinite alternate;
+  color: white;
+  padding: 1em;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+footer .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 3rem;
+  padding: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+footer .container p {
+  margin: 0;
+}
+
+nav {
+  float: right;
+}
+
+nav a {
+  text-decoration: none;
+  padding: 10px 15px;
+  font-weight: 500;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  color: #800000;
+  font-family: "Lucida Console", "Courier New", monospace;
+  margin: 0 5px;
+  display: inline-block;
+}
+
+nav a:hover {
+  color: #800080;
+  background-color: #eecdf891;
+}
+
+nav a.active {
+  background-color: #e9c4f579;
+  color: #010505;
+  font-weight: 700;
+}
+
+/* main grows to fill space to push the footer to the bottom */
+main {
+  flex: 1 0 auto;
+  padding: 2em;
+}
+
+.profile-pic {
+  width: 305px;
+  height: 500px;
+  float: left;
+  margin-right: 20px;
+}
+
+.intro-video {
+  width: 500px;
+  height: 500px;
+  display: block;
+  margin: 20px auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.card {
+  overflow: auto;
+  margin-bottom: 2em;
+  background: rgba(221, 206, 236, 0.363);
+  border-radius: 10px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.card h2 {
+  margin-bottom: 1rem;
+  color: #f5f5f5;
+  text-shadow: 1px black;
+}
+
+/* responsive */
+/* full width on narrow screen */
+@media screen and (max-width: 600px) {
+  nav a {
+    display: block;
+    margin: 0.5em 0;
+  }
+
+  .intro-video, .profile-pic {
+    width: 100%;
+    height: auto;
+    margin: 0.5em auto;
+  }
+}
+
+ul.custom-list, ul.sub-list {
+  list-style: none;
+  margin: 0;
+  padding-left: 0;
+}
+
+.custom-list li {
+  position: relative;
+  padding-left: 1.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.custom-list li::before {
+  content: "★";
+  position: absolute;
+  left: 0;
+  color: rgba(231, 15, 123, 0.945);
+  font-size: 1rem;
+}
+
+ul.sub-list {
+  margin-top: 0.5em;
+  margin-bottom: 1em;
+}
+
+.password-generator {
+  background: rgba(240, 226, 243, 0.459);
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+  width: 100%;
+}
+
+.password-generator h2 {
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+label {
+  display: block;
+  margin-top: 1rem;
+}
+
+input[type="number"],
+select {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.3rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.options {
+  margin-top: 1rem;
+}
+
+.options label {
+  display: block;
+  margin: 0.5rem 0;
+}
+
+button {
+  margin-top: 1.5rem;
+  width: 100%;
+  padding: 0.8rem;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.result {
+  margin-top: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+main.guess-pass{
+  display: flex;
+  justify-content: center;  /* horizontal center */
+  align-items: center; 
+}
