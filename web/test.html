@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Password Test</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 720px; margin: 32px auto; padding: 0 16px; }
+    .form-group { margin-bottom: 1rem; }
+    label { display:block; font-weight:600; margin-bottom:0.25rem; }
+    input, select, button { padding: 0.5rem; border-radius:6px; border:1px solid #ccc; width:100%; box-sizing:border-box;}
+    .inline-row { display:flex; gap:1rem; align-items:center; }
+    .inline-row > * { flex: 1 1 auto; }
+    #password-list { margin-top:1rem; padding-left:1.25rem; }
+  </style>
+</head>
+<body>
+  <h1>Password Generator — Test</h1>
+
+  <form id="password-form" autocomplete="off">
+    <div class="form-group">
+      <label for="length">Password length: <span id="length-value">12</span></label>
+      <input type="range" id="length" min="8" max="20" value="12" />
+    </div>
+
+    <div class="form-group">
+      <label for="num">Favorite 2-digit number</label>
+      <input type="number" id="num" min="10" max="99" value="42" required />
+    </div>
+
+    <div class="form-group">
+      <label for="interest">Interest</label>
+      <select id="interest" required>
+        <option value="" disabled selected>Choose</option>
+        <option value="education">Education</option>
+        <option value="industry">Industry</option>
+        <option value="chat">Chat topic</option>
+      </select>
+    </div>
+
+    <div class="form-group inline-row">
+      <label style="flex:0 0 auto;">Include symbol</label>
+      <input type="checkbox" id="include-symbol" style="width:auto;" />
+      <label style="flex:0 0 auto; margin-left:8px;">Include lower</label>
+      <input type="checkbox" id="include-lower" style="width:auto;" checked />
+    </div>
+
+    <div class="form-group inline-row">
+      <label style="flex:0 0 auto;">Include upper</label>
+      <input type="checkbox" id="include-upper" style="width:auto;" />
+      <label style="flex:0 0 auto; margin-left:8px;">Include initials</label>
+      <input type="checkbox" id="include-initials" style="width:auto;" />
+    </div>
+
+    <div style="display:flex; gap: 0.5rem;">
+      <button type="submit">Generate 1</button>
+      <button type="button" id="more-btn">10 more</button>
+    </div>
+  </form>
+
+  <h2>Results</h2>
+  <ul id="password-list"></ul>
+
+  <script>
+    // Small defensive helper to show console errors if elements missing
+    function $(id) { return document.getElementById(id); }
+
+    const lengthInput = $('length');
+    const lengthValue = $('length-value');
+    const form = $('password-form');
+    const moreBtn = $('more-btn');
+    const passwordList = $('password-list');
+
+    // Defensive: ensure elements exist
+    if (!lengthInput || !lengthValue || !form || !passwordList) {
+      console.error('Missing required DOM elements. Check ids: length, length-value, password-form, password-list');
+    }
+
+    // update display immediately and on input
+    function updateLengthDisplay() {
+      if (lengthValue && lengthInput) lengthValue.textContent = lengthInput.value;
+    }
+    updateLengthDisplay(); // initial
+    lengthInput.addEventListener('input', updateLengthDisplay);
+
+    const symbols = '@!#$%&+';
+    const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+    const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const interestOptions = {
+      education: ['masters', 'Latrobe', 'Clouds', 'DataSQL'],
+      industry: ['SupplyChain','Logistics','Commodities','Trading','Tourism','Technology','Fintech'],
+      chat: ['Studying','Online','Business','Analyst','Artificial','Intelligence','Python','Leetcode','Cooking','Baking','Badminton','Swimming','YogaFlow']
+    };
+
+    function randomFromArray(arr) { return arr[Math.floor(Math.random()*arr.length)]; }
+    function getRandomChars(pool, count) {
+      let s = '';
+      for (let i=0;i<count;i++) s += pool.charAt(Math.floor(Math.random()*pool.length));
+      return s;
+    }
+
+    function generatePassword(shuffleParts=false) {
+      const len = parseInt(lengthInput.value, 10);
+      const num = $('num').value.trim();
+      const interestCat = $('interest').value;
+      const includeSymbol = $('include-symbol').checked;
+      const includeLower = $('include-lower').checked;
+      const includeUpper = $('include-upper').checked;
+      const includeInitials = $('include-initials').checked;
+
+      if (!num || !interestCat) {
+        alert('Please provide number and interest.');
+        return null;
+      }
+
+      let pool = '';
+      if (includeLower) pool += lowercase;
+      if (includeUpper) pool += uppercase;
+
+      const interestWord = randomFromArray(interestOptions[interestCat] || ['profile']);
+      const parts = [];
+
+      if (includeSymbol) parts.push(randomFromArray(symbols));
+
+      // compute how many random chars we can insert (non-negative)
+      const overhead = num.length + interestWord.length + (includeInitials ? 3 : 0) + (includeSymbol ? 1 : 0); // leaving room for final symbol if selected
+      let remaining = len - overhead - (includeSymbol ? 1 : 0); // subtract final symbol too if we want two symbols total
+      if (remaining < 0) remaining = 0;
+      // use pool or default lowercase
+      parts.push(getRandomChars(pool || lowercase, remaining));
+
+      parts.push(num);
+      parts.push(interestWord);
+      if (includeInitials) parts.push('MTH');
+      if (includeSymbol) parts.push(randomFromArray(symbols));
+
+      if (shuffleParts) {
+        for (let i = parts.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [parts[i], parts[j]] = [parts[j], parts[i]];
+        }
+      }
+      return parts.join('');
+    }
+
+    function showPasswords(count=1, shuffle=false) {
+      passwordList.innerHTML = '';
+      let created = 0;
+      for (let i=0; i < count; i++) {
+        const pw = generatePassword(shuffle);
+        if (!pw) break;
+        const li = document.createElement('li');
+        li.textContent = pw;
+        passwordList.appendChild(li);
+        created++;
+      }
+      if (created === 0) passwordList.innerHTML = '<li>(no passwords generated)</li>';
+    }
+
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      showPasswords(1, false);
+    });
+
+    moreBtn.addEventListener('click', function() {
+      showPasswords(10, true);
+    });
+
+    // small debug: log if an exception occurs
+    window.addEventListener('error', function(ev) {
+      console.error('Window error:', ev.error);
+    });
+  </script>
+</body>
+</html>
