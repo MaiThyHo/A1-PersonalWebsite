@@ -13,6 +13,7 @@ It also includes a **Guess Password** feature for fun user interaction.
 4. Navigate through the pages using the navigation menu.
 
 No build process or server setup is required, this website runs entirely in the browser.
+However, there are dockerfile and docker-compose.yml for you to run it in localhost:8080
 
 ---
 
@@ -28,7 +29,7 @@ No build process or server setup is required, this website runs entirely in the 
   Interactive form where the user can input preferences and generate a custom password.
 
 - **Responsive Design**  
-  Works on desktop, tablet, and mobile screens using CSS Grid and Flexbox.
+  Works on desktop, tablet, and mobile screens using CSS Flexbox.
 
 ---
 
